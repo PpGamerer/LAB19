@@ -30,15 +30,15 @@ void Unit::create(string t){
 		type = "Hero";
 		cout << "Please input your name: ";
 		getline(cin,name);
-		hpmax = rand()%20+90;
-		atk = rand()%5+14;
-		def = rand()%3+9;
+		hpmax = rand()%20+90; //0-19
+		atk = rand()%5+14; //0-4
+		def = rand()%3+9; //0-2
 	}else if(t == "Monster"){
 		type = "Monster";
 		name = "Kraken";
-		hpmax = rand()%20+200;
-		atk = rand()%5+25;
-		def = rand()%3+5;
+		hpmax = rand()%20+200; //0-19
+		atk = rand()%5+25; //0-4
+		def = rand()%3+5; //0-2
 	}
 	hp = hpmax;
 	guard_on = false;
@@ -68,9 +68,39 @@ void Unit::newTurn(){
 /////////////////////////////////////////////////////////////////////////////////////
 //Write function members isDead(), guard(), heal(), beAttacked(), and attack() here//
 /////////////////////////////////////////////////////////////////////////////////////
+bool Unit::isDead(){
+    if(hp<=0) return true;
+    else return false;
+}
 
+void Unit::guard(){
+    guard_on = true;
+}
 
+int Unit::beAttacked(int oppatk){
+    int dmg;
+	if(guard_on){
+        dmg = (oppatk-def)/3;
+        hp = hp-dmg;
+    } else {
+		dmg = oppatk-def;
+        hp = hp-dmg;
+	}
+    return dmg;
+}
 
+int Unit::attack(Unit &target){
+	return target.beAttacked(atk);
+}
+
+int Unit::heal(){
+    int h,prevhp;
+	h = rand()%21+10;
+	prevhp = hp;
+	hp = hp+h;
+	if(hp>hpmax) hp = hpmax;
+    return hp-prevhp;
+}
 void drawScene(char p_action,int p,char m_action,int m){
 	cout << "                                                       \n";
 	if(p_action == 'A'){
